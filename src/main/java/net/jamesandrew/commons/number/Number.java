@@ -52,4 +52,9 @@ public final class Number {
         return ThreadLocalRandom.current().nextInt(origin, bound - 1);
     }
 
+    public static boolean isBetween(int a, int b, int value, boolean inclusive) {
+        if (a == b) return value == a;
+        return a > b ? inclusive ? value >= b && value <= a : value > b && value < a : inclusive ? value >= a && value <= b : value > a && value < b;
+    }
+
 }
