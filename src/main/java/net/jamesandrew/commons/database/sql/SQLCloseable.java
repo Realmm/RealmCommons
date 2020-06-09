@@ -35,4 +35,8 @@ public interface SQLCloseable {
         }
     }
 
+    default boolean canClose(Object o) {
+        return o instanceof ResultSet || o instanceof Connection || o instanceof Statement;
+    }
+
 }

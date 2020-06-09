@@ -1,5 +1,7 @@
 package net.jamesandrew.commons.number;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public final class Number {
 
     private Number(){}
@@ -41,6 +43,13 @@ public final class Number {
 
     public static float getFloat(String s) {
         return Float.valueOf(s);
+    }
+
+    /**
+     * Returns random with origin and bound being inclusive
+     */
+    public static long getRandom(int origin, int bound) {
+        return ThreadLocalRandom.current().nextInt(origin, bound - 1);
     }
 
 }

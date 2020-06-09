@@ -32,6 +32,22 @@ public abstract class MySQL implements SQLDataType {
         ping();
     }
 
+    public String getHost() {
+        return host;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public void ping() {
         final int delay = 10;
