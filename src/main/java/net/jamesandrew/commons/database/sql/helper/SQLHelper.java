@@ -1,6 +1,7 @@
 package net.jamesandrew.commons.database.sql.helper;
 
 import net.jamesandrew.commons.database.sql.MySQL;
+import net.jamesandrew.commons.logging.Logger;
 import net.jamesandrew.commons.manager.ManagedHashSet;
 
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ public final class SQLHelper {
         this.mySQL = mySQL;
     }
 
-    public void createTable(String name, boolean async, SQLColumn[] columns) {
+    public void createTable(String name, boolean async, SQLColumn... columns) {
         if (columns.length <= 1) return;
         StringBuilder sqlSb = new StringBuilder("CREATE TABLE IF NOT EXISTS " + name + " (");
 
@@ -37,7 +38,7 @@ public final class SQLHelper {
         } else mySQL.operate(PreparedStatement::execute, sqlSb.toString());
     }
 
-    public void insert(String name, boolean update, boolean async, SQLObject<Object>[] columns) {
+    public void insert(String name, boolean update, boolean async, SQLObject... columns) {
 //        if (objects.length <= 1 || columns.length != objects.length) return;
         StringBuilder sqlSb = new StringBuilder("INSERT INTO ");
         StringBuilder valuesSb = new StringBuilder("VALUES (");
@@ -61,7 +62,7 @@ public final class SQLHelper {
         if (update) {
             sqlSb.append(" ON DUPLICATE KEY UPDATE ");
             for (int i = 0; i < columns.length; i++) {
-                SQLObject<Object> c = columns[i];
+                SQLObject c = columns[i];
                 if (!c.isUpdateable()) continue;
                 sqlSb.append(c.getKey());
                 sqlSb.append("=VALUES(");
@@ -72,7 +73,7 @@ public final class SQLHelper {
                 Arrays.stream(Arrays.copyOfRange(columns, i, columns.length - 1)).filter(SQLObject::isUpdateable).findFirst().ifPresent(co -> sqlSb.append(", "));
             }
         }
-
+        Logger.debug("SQL: " + sqlSb.toString());
         if (async) {
             mySQL.operateAsync(PreparedStatement::execute, sqlSb.toString(), Arrays.stream(columns).map(SQLObject::get).toArray(Object[]::new));
         } else mySQL.operate(PreparedStatement::execute, sqlSb.toString(), Arrays.stream(columns).map(SQLObject::get).toArray(Object[]::new));

@@ -1,14 +1,14 @@
 package net.jamesandrew.commons.database.sql.helper;
 
-public class SQLObject<T> {
+public class SQLObject {
 
     private final String key;
-    private final T t;
+    private final Object o;
     private boolean update = true;
 
-    public SQLObject(String key, T t) {
+    public SQLObject(String key, Object o) {
         this.key = key;
-        this.t = t;
+        this.o = o;
     }
 
     public void setUpdateable(boolean update) {
@@ -23,8 +23,8 @@ public class SQLObject<T> {
         return key;
     }
 
-    public T get() {
-        return t;
+    public Object get() {
+        return o;
     }
 
 }
