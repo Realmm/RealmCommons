@@ -1,10 +1,24 @@
 package net.jamesandrew.commons.number;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public final class Number {
 
     private Number(){}
+
+    public static boolean isLong(String s) {
+        try {
+            Long.valueOf(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     public static boolean isInt(String s) {
         try {
@@ -51,6 +65,10 @@ public final class Number {
         }
     }
 
+    public static long getLong(String s) {
+        return Long.valueOf(s);
+    }
+
     public static short getShort(String s) {
         return Short.valueOf(s);
     }
@@ -84,8 +102,47 @@ public final class Number {
     }
 
     public static double round(double value, int precision) {
-        int scale = (int) Math.pow(10, precision);
-        return (double) Math.round(value * scale) / scale;
+        return BigDecimal.valueOf(value).setScale(precision, RoundingMode.HALF_EVEN).doubleValue();
+//        int scale = (int) Math.pow(10, precision);
+//        return (double) Math.round(value * scale) / scale;
+    }
+
+    public static int getNextInt(int[] a, int start) {
+        return getNextInt(Arrays.stream(a).boxed().collect(Collectors.toList()), start);
+    }
+
+    public static int getNextInt(Collection<Integer> c, int start) {
+        int i = start;
+
+        /*
+        c = {1, 2}, start = 0, next = 0 // start below set
+        c = {0, 1, 2}, start = 3, next = 3 // start above set
+        c = {0, 1, 2}, start = 0, next = 3 // start beginning of set
+        c = {-1, 0, 1}, start = 0, next = 2 // start middle of set
+        c = {0, 1, 2}, start = 2, next = 3 // start end of set
+         */
+
+        if (c.stream().allMatch(v -> v < start)) return start; // start above set
+        if (c.stream().allMatch(v -> v > start)) return start; // start below set
+
+        if (c.stream().distinct().count() == 1) {
+            int x = c.stream().distinct().findFirst().orElse(-1);
+            if (start == x) {
+                return x + 1;
+            } else return start;
+        }
+
+        /*
+        Amount of distinct numbers in collection is >= 2
+        Start value is inside the set somewhere
+         */
+        for (int x : c.stream().sorted().distinct().collect(Collectors.toList())) {
+            if (x < i) continue;
+            if (x != i) return i;
+            i++;
+        }
+
+        return i;
     }
 
 }

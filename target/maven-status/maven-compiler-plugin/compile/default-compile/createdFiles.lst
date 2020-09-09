@@ -8,6 +8,7 @@ net\jamesandrew\commons\database\mongo\MongoDB$4.class
 net\jamesandrew\commons\database\sql\helper\SQLTable.class
 net\jamesandrew\commons\database\sql\helper\SQLColumn.class
 net\jamesandrew\commons\database\sql\MySQL.class
+net\jamesandrew\commons\database\mongo\MongoDB$6.class
 net\jamesandrew\commons\database\mongo\callback\IDatabaseResultCallback.class
 net\jamesandrew\commons\database\mongo\MongoDB$ErrorOnlyCallBack.class
 net\jamesandrew\commons\database\mongo\MongoDB$NonErrorOnlyCallBack.class

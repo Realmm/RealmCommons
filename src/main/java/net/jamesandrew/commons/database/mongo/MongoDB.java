@@ -60,6 +60,15 @@ public class MongoDB {
         }
     }
 
+    protected void deleteCollection(String s, IDatabaseResultCallback<Void> callback) {
+        getCollection(s).drop(new ErrorOnlyCallBack<Void>() {
+            @Override
+            public void onResult(Void result) {
+                if (callback != null) callback.accept(result);
+            }
+        });
+    }
+
     protected void createCollection(String s, IDatabaseResultCallback<Void> callback) {
         MongoDatabase database = getDatabase();
         Set<String> list = new HashSet<>();
@@ -70,6 +79,7 @@ public class MongoDB {
 
         latch.await();
 
+
         if (!list.contains(s)) {
             database.createCollection(s,
                     new CreateCollectionOptions().autoIndex(true), new ErrorOnlyCallBack<Void>() {
@@ -78,8 +88,9 @@ public class MongoDB {
                             if (callback != null) callback.accept(result);
                         }
                     });
+        } else {
+            if (callback != null) callback.accept(null);
         }
-        if (callback != null) callback.accept(null);
     }
 
     protected void getDocument(MongoCollection<Document> documents, String key, String id, IDatabaseResultCallback<Document> callback) {
@@ -134,6 +145,7 @@ public class MongoDB {
             if (throwable != null) {
                 throwable.printStackTrace();
             }
+            onResult(t);
         }
 
         public abstract void onResult(T result);
